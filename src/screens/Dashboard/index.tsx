@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import HighlightCard from "../../components/HighlightCard";
 import TransactionCard, { Transaction } from "../../components/TransactionCard";
 
@@ -24,32 +26,40 @@ export interface DataListProps extends Transaction {
 }
 
 const Dashboard: React.FC = () => {
-  const data: DataListProps[] = [
-    {
-      id: "1",
-      type: "positive",
-      title: "Desenvolvimento de site",
-      amount: "R$ 12.000,00",
-      date: "12/12/2021",
-      category: { name: "Vendas", icon: "dollar-sign" }
-    },
-    {
-      id: "2",
-      type: "negative",
-      title: "Hamburgueria",
-      amount: "R$ 12.000,00",
-      date: "12/12/2021",
-      category: { name: "Alimentação", icon: "coffee" }
-    },
-    {
-      id: "3",
-      type: "positive",
-      title: "Aluguel casa",
-      amount: "R$ 12.000,00",
-      date: "12/12/2021",
-      category: { name: "Vendas", icon: "home" }
+  const [data, setData] = useState<DataListProps[]>([]);
+
+  useEffect(() => {
+    async function loadTransactions() {
+      const dataKey = "@gofinances:transactions";
+      const response = await AsyncStorage.getItem(dataKey);
+      const transactions = response ? JSON.parse(response) : [];
+
+      const formattedTransactions = transactions.map((item: DataListProps) => {
+        const amount = Number(item.amount).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        });
+        const date = Intl.DateTimeFormat("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit"
+        }).format(new Date(item.date));
+
+        return {
+          id: item.id,
+          name: item.name,
+          amount,
+          type: item.type,
+          category: item.category,
+          date
+        };
+      }) as DataListProps[];
+
+      setData(formattedTransactions);
     }
-  ];
+
+    loadTransactions();
+  }, []);
 
   return (
     <Container>
