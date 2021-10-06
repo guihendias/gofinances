@@ -16,6 +16,7 @@ import {
   Poppins_500Medium,
   Poppins_700Bold
 } from "@expo-google-fonts/poppins";
+import { StatusBar } from "expo-status-bar";
 
 export default function App() {
   const [fonstLoaded] = useFonts({
@@ -30,6 +31,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <StatusBar style="light" />
       <NavigationContainer>
         <AppRoutes />
       </NavigationContainer>

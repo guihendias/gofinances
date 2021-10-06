@@ -1,5 +1,5 @@
 import { BorderlessButton } from "react-native-gesture-handler";
-import { RFValue } from "react-native-responsive-fontsize";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
 import { Feather } from "@expo/vector-icons";
 
@@ -67,4 +67,11 @@ export const SelectIcon = styled(Feather)`
 export const Month = styled.Text`
   font-family: ${({ theme }) => theme.fonts.regular};
   font-size: ${RFValue(20)}px;
+`;
+
+export const LoadingContianer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  height: ${RFPercentage(70)}px;
 `;
