@@ -31,6 +31,7 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "^3.8.0",
     "react-native-svg": "^12.1.1",
+    "react-native-svg-transformer": "^0.14.3",
     "react-native-unimodules": "~0.14.5",
     "react-native-uuid": "^2.0.1",
     "react-native-web": "~0.13.12",
@@ -40,10 +41,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
-    "@types/react": "~16.9.35",
+    "@types/react": "^17.0.27",
     "@types/react-native": "~0.63.2",
     "@types/styled-components-react-native": "^5.1.1",
-    "typescript": "~4.0.0"
+    "typescript": "4.3.5"
   },
   "private": true
 }

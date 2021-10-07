@@ -9,6 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import theme from "./src/global/styles/theme";
 
 import { AppRoutes } from "./src/routes/app.routes";
+import { AuthProvider } from "./src/hooks/auth";
 
 import {
   useFonts,
@@ -17,6 +18,7 @@ import {
   Poppins_700Bold
 } from "@expo-google-fonts/poppins";
 import { StatusBar } from "expo-status-bar";
+import SignIn from "./src/screens/SignIn";
 
 export default function App() {
   const [fonstLoaded] = useFonts({
@@ -33,7 +35,9 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <StatusBar style="light" />
       <NavigationContainer>
-        <AppRoutes />
+        <AuthProvider>
+          <SignIn />
+        </AuthProvider>
       </NavigationContainer>
     </ThemeProvider>
   );
