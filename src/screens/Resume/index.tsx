@@ -26,6 +26,7 @@ import {
 } from "./styles";
 import { ActivityIndicator } from "react-native";
 import { useFocusEffect } from "@react-navigation/core";
+import { useAuth } from "../../hooks/auth";
 
 interface CategoryData {
   key: string;
@@ -43,6 +44,9 @@ const Resume: React.FC = () => {
     []
   );
 
+  const { user } = useAuth();
+  const theme = useTheme();
+
   function handleDateChange(action: "next" | "prev") {
     if (action === "next") {
       setSelectedDate(addMonths(selectedDate, 1));
@@ -51,11 +55,9 @@ const Resume: React.FC = () => {
     }
   }
 
-  const theme = useTheme();
-
   async function loadData() {
     setLoading(true);
-    const dataKey = "@gofinances:transactions";
+    const dataKey = `@gofinances:transactions_user${user.id}}`;
     const response = await AsyncStorage.getItem(dataKey);
     const transactions = (
       response ? JSON.parse(response) : []

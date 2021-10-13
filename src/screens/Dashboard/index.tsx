@@ -24,6 +24,7 @@ import {
 import { useFocusEffect } from "@react-navigation/core";
 import { ActivityIndicator } from "react-native";
 import { useTheme } from "styled-components";
+import { useAuth } from "../../hooks/auth";
 
 export interface DataListProps extends Transaction {
   id: string;
@@ -48,11 +49,16 @@ const Dashboard: React.FC = () => {
   );
 
   const theme = useTheme();
+  const { signOut, user } = useAuth();
 
   function getLastTransactionDate(
     collection: DataListProps[],
     type: "positive" | "negative"
   ) {
+    if (collection.length === 0) {
+      return null;
+    }
+
     const lastTransactions = new Date(
       Math.max.apply(
         Math,
@@ -62,9 +68,6 @@ const Dashboard: React.FC = () => {
       )
     );
 
-    console.log(collection);
-    console.log(lastTransactions);
-
     return `${lastTransactions.getDate()} de ${lastTransactions.toLocaleDateString(
       "pt-BR",
       { month: "long" }
@@ -72,7 +75,7 @@ const Dashboard: React.FC = () => {
   }
 
   async function loadTransactions() {
-    const dataKey = "@gofinances:transactions";
+    const dataKey = `@gofinances:transactions_user${user.id}}`;
     const response = await AsyncStorage.getItem(dataKey);
     const transactions = (
       response ? JSON.parse(response) : []
@@ -120,27 +123,34 @@ const Dashboard: React.FC = () => {
     );
 
     setTransactions(formattedTransactions);
+
     setHighlightData({
       entries: {
         amount: entriesTotal.toLocaleString("pt-BR", {
           style: "currency",
           currency: "BRL"
         }),
-        lastTransaction: `Última entrada dia ${lastTransactionsEntries}`
+        lastTransaction: lastTransactionsEntries
+          ? `Última entrada dia ${lastTransactionsEntries}`
+          : ""
       },
       expenses: {
         amount: expensesTotal.toLocaleString("pt-BR", {
           style: "currency",
           currency: "BRL"
         }),
-        lastTransaction: `Última despesa dia ${lastTransactionsExpenses}`
+        lastTransaction: lastTransactionsExpenses
+          ? `Última despesa dia ${lastTransactionsExpenses}`
+          : ""
       },
       total: {
         amount: total.toLocaleString("pt-BR", {
           style: "currency",
           currency: "BRL"
         }),
-        lastTransaction: `01 à ${lastTransactionsExpenses}`
+        lastTransaction: lastTransactionsExpenses
+          ? `01 à ${lastTransactionsExpenses}`
+          : ""
       }
     });
 
@@ -170,17 +180,17 @@ const Dashboard: React.FC = () => {
               <UserInfo>
                 <Photo
                   source={{
-                    uri: "https://i.pinimg.com/474x/9b/dc/2f/9bdc2fe7830cfba6e870f2a8f5e16383.jpg"
+                    uri: user.photo
                   }}
                 />
 
                 <User>
                   <UserGreeting>Olá, </UserGreeting>
-                  <UserName>Guilherme</UserName>
+                  <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
 
-              <LogoutButton onPress={() => {}}>
+              <LogoutButton onPress={signOut}>
                 <Icon name="power" />
               </LogoutButton>
             </UserWrapper>
